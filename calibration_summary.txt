@@ -1,0 +1,99 @@
+NICOLAS AI BROKER — CALIBRATION STUDY SUMMARY
+Généré le : 2026-03-09 15:41:51
+Source    : DB SQLite + FIFO
+Période   : 2026-03-05 -> 2026-03-08
+Total trades fermés : 187
+
+======================================================================
+  1. VUE GLOBALE
+======================================================================
+  Trades gagnants    : 115  (61.5%)
+  Trades perdants    : 72  (38.5%)
+  P&L total          : +163.09 €
+  P&L moyen/trade    : +0.8722 €
+  Conf. implicite moy: 81.9%
+  Conf. implicite méd: 80.0%
+
+======================================================================
+  2. EXPECTED CALIBRATION ERROR (ECE) PAR AGENT
+======================================================================
+  Agent           ECE    Conf.moy    Win Rate    N Trades
+  ----------------------------------------------------------
+  GPT          0.4419       77.9%       43.8%          32
+  GEMINI       0.5289       86.2%       33.3%          72
+  LLAMA        0.2626       73.7%      100.0%          23
+  CLAUDE       0.1202       81.8%       90.0%          60
+  TOUS         0.2486       81.9%       61.5%         187
+
+  ECE interprétation :
+    < 0.05  -> Bien calibré
+    0.05–0.15 -> Calibration acceptable
+    > 0.15  -> Sur/sous-confiance significative
+
+======================================================================
+  3. CALIBRATION DÉTAILLÉE PAR BIN × AGENT
+======================================================================
+
+  Agent : GPT  (32 trades)
+  Bin            N    Conf.moy    Win Rate       Écart
+  -------------------------------------------------------
+  40–60          4       60.0%      100.0%    -0.400  SOUS-CONF.
+  60–80         26       80.0%       34.6%    +0.454  SURCONFIANCE
+  80–100         2       87.0%       50.0%    +0.370  SURCONFIANCE
+
+  Agent : GEMINI  (72 trades)
+  Bin            N    Conf.moy    Win Rate       Écart
+  -------------------------------------------------------
+  60–80         34       80.0%       29.4%    +0.506  SURCONFIANCE
+  80–100        38       91.8%       36.8%    +0.549  SURCONFIANCE
+
+  Agent : LLAMA  (23 trades)
+  Bin            N    Conf.moy    Win Rate       Écart
+  -------------------------------------------------------
+  20–40          4       30.0%      100.0%    -0.700  SOUS-CONF.
+  60–80         10       80.0%      100.0%    -0.200  SOUS-CONF.
+  80–100         9       86.2%      100.0%    -0.138  SOUS-CONF.
+
+  Agent : CLAUDE  (60 trades)
+  Bin            N    Conf.moy    Win Rate       Écart
+  -------------------------------------------------------
+  40–60          2       60.0%       50.0%    +0.100  SURCONFIANCE
+  60–80         38       78.8%       94.7%    -0.159  SOUS-CONF.
+  80–100        20       89.8%       85.0%    +0.048  OK
+
+  Agent : TOUS  (187 trades)
+  Bin            N    Conf.moy    Win Rate       Écart
+  -------------------------------------------------------
+  20–40          4       30.0%      100.0%    -0.700  SOUS-CONF.
+  40–60          6       60.0%       83.3%    -0.233  SOUS-CONF.
+  60–80        108       79.6%       60.2%    +0.194  SURCONFIANCE
+  80–100        69       90.4%       59.4%    +0.309  SURCONFIANCE
+
+======================================================================
+  4. CALIBRATION PAR RÉGIME DE MARCHÉ
+======================================================================
+Voir export_calibration_study.csv  
+-> Lancez export_calibration_study.py pour enrichir les données.
+
+======================================================================
+  5. OBSERVATIONS & RECOMMANDATIONS
+======================================================================
+
+  Agent le mieux calibré : CLAUDE (ECE = 0.1202)
+  Agent le moins calibré : GEMINI (ECE = 0.5289)
+
+  Top 3 valeurs de confiance implicite :
+    80% -> 123 trades (65.8%)
+    94% -> 51 trades (27.3%)
+    60% -> 6 trades (3.2%)
+
+  NOTE ARCHITECTURE :
+  confiance_implicite = 100 − score_risque est un proxy.
+  Pour une calibration directe, il faudrait stocker
+  niveau_confiance (0-100) dans historique_transactions.
+  Le clustering observé reflète les valeurs discrètes
+  du score_risque LLM (typiquement 0, 6, 20, 100).
+
+======================================================================
+  FIN DU RAPPORT
+======================================================================
